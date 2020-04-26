@@ -1,16 +1,7 @@
+const fs = require('fs');
+
 exports.handler = async (event, context) => {
-    const htmlBody = `
-<!doctype html>
-<html>
-    <head>
-        <title>500 - Internal Server Error</title>
-    </head>
-    <body>
-        <h1>HTTP 500</h1>
-        <h2>Internal Server Error</h2>
-    </body>
-</html>
-`;
+    const htmlBody = fs.readFileSync('./500.html').toString();
     const response = {
         status: '500',
         statusDescription: 'Internal Server Error',
