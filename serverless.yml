@@ -1,0 +1,52 @@
+service: http500aas
+
+provider:
+  name: aws
+  stage: ${opt:stage,'dev'}
+  runtime: nodejs12.x
+  region: us-east-1
+  tags:
+    Application: 500aas
+  role: ${env:AWS_LAMBDA_ROLE_ARN}
+  logRetentionInDays: 7
+  
+functions:
+  500asaservice:
+    handler: index.handler
+    memorySize: 128
+    events:
+      - cloudFront:
+          eventType: viewer-request
+          pathPattern: ""
+          origin:
+            DomainName: _500.sgfault.com
+            CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+          behavior:
+            ViewerProtocolPolicy: https-only
+
+resources:
+  Resources:
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          PriceClass: PriceClass_100
+          HttpVersion: http2
+          Aliases:
+            - 500asaservice.com
+          ViewerCertificate:
+            AcmCertificateArn: ${env:ACM_CERT_ARN}
+            SslSupportMethod: sni-only
+            MinimumProtocolVersion: TLSv1.2_2018
+          CustomErrorResponses:
+            - ErrorCode: 400
+              ResponseCode: 500
+              ResponsePagePath: "/"
+            - ErrorCode: 403
+              ResponseCode: 500
+              ResponsePagePath: "/"
+        Tags:
+          -
+            Key: Application
+            Value: 500aas
