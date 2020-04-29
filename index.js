@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-exports.handler = async (event, context) => {
+exports.handler = async () => {
     const htmlBody = fs.readFileSync('./500.html').toString();
     const response = {
         status: '500',
