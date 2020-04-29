@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1.4.2
+        with:
+          node-version: 12.x
+      - name: test
+        if: github.actor == github.event.repository.owner.login
+        run: node test.js
       - name: deploy
         if: github.actor == github.event.repository.owner.login
         uses: serverless/github-action@v1.53.0
