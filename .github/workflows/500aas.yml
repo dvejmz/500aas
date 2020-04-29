@@ -3,12 +3,15 @@ on:
   push:
     branches:
       - master
+  watch:
+    types: [started]
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: deploy
+        if: github.actor == github.event.repository.owner.login
         uses: serverless/github-action@v1.53.0
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
