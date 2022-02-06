@@ -3,7 +3,7 @@ service: http500aas
 provider:
   name: aws
   stage: ${opt:stage,'dev'}
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   region: us-east-1
   tags:
     Application: 500aas
@@ -38,7 +38,7 @@ resources:
           ViewerCertificate:
             AcmCertificateArn: ${env:ACM_CERT_ARN}
             SslSupportMethod: sni-only
-            MinimumProtocolVersion: TLSv1.2_2018
+            MinimumProtocolVersion: TLSv1.2_2021
           CustomErrorResponses:
             - ErrorCode: 400
               ResponseCode: 500
